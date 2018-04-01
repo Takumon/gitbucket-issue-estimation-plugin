@@ -67,20 +67,20 @@ $(() => {
 
     // 作業量の指定があればUIに反映
     if (estimation) {
-      $('.estimation-dromdown-option[data-id="${estimation}"] i.octicon-check').addClass('octicon-check');
+      $('.estimation-dropdown-option[data-id="${estimation}"] i.octicon-check').addClass('octicon-check');
       $lableEstimation.addClass('selected').text(estimation);
     } else {
       $lableEstimation.text('No estimation');
     }
 
-    $('#estimation-dropdown-memu').on('click', '.estimation-dromdown-option', function() {
+    $('#estimation-dropdown-memu').on('click', '.estimation-dropdown-option', function() {
       var selectedEstimation = $(this).data('id');
       var $selectedOction = $(this).find('i.octicon');
 
       // data-idが存在しない場合は値をクリアする
       if (!selectedEstimation) {
         return deleteEstimation().then(function() {
-          var $oldSelectedOption = $('.estimation-dromdown-option i.octicon-check');
+          var $oldSelectedOption = $('.estimation-dropdown-option i.octicon-check');
           $oldSelectedOption.removeClass('octicon-check');
           $lableEstimation.removeClass('selected').text('No estimation');
         })
@@ -92,7 +92,7 @@ $(() => {
       // 選択した作業量を更新
       upsertEstimation(selectedEstimation).then(function() {
         // UIを更新
-        var $oldSelectedOption = $('.estimation-dromdown-option i.octicon-check');
+        var $oldSelectedOption = $('.estimation-dropdown-option i.octicon-check');
         $oldSelectedOption.removeClass('octicon-check');
         $selectedOction.addClass('octicon-check');
         $lableEstimation.addClass('selected').text(selectedEstimation);
