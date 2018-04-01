@@ -21,6 +21,21 @@ class Plugin extends gitbucket.core.plugin.Plugin {
     new Version("0.1", new LiquibaseMigration("update/gitbucket-issue-estimation_0.1.xml"))
   )
 
+  override val assetsMappings = Seq("/issue-estimation/assets" -> "/issue-estimation/assets")
+
+  override def javaScripts(registry: PluginRegistry, context: ServletContext, settings: SystemSettings): Seq[(String, String)] = {
+
+    val path = settings.baseUrl.getOrElse(context.getContextPath)
+
+    Seq(
+      ".*/issues/\\d+$" -> s"""
+         |</script>
+         |<script src="$path/plugin-assets/issue-estimation/assets/issue.js"></script>
+         |<script>
+      """.stripMargin
+    )
+  }
+
   override def issueSidebars(
     registry: PluginRegistry,
     context: ServletContext,
