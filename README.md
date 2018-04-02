@@ -12,7 +12,7 @@ You can estimate issue  in GitBucket
 
 Plugin version|GitBucket version
 :---|:---
-0.1|4.15.x
+0.1|4.20.x
 
 ## Build from source
 
