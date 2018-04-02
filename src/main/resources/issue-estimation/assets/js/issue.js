@@ -1,11 +1,12 @@
 // IE11を考慮してES5の記法で書く
 
+
 /**
  * イシュー画面の初期化処理
  */
 $(() => {
-  /**  Issueの作業量を操作するためのURL */
-  var issueEstimateUrl = location.pathname + '/estimate'
+  // Plugin.scalaの変数を受け取る
+  var issueEstimateUrl = ISSUE_ESTIMATE_URL;
 
   /**
    * issueの作業量を取得する.

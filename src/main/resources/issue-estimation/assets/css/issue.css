@@ -1,0 +1,20 @@
+#label-estimation {
+  width: 100%;
+  text-align: left;
+  -webkit-appearance: none;
+  display: inline-block;
+  color: #777;
+  font-size: 0.9em;
+  line-height: 12px;
+}
+
+#label-estimation.selected {
+  text-indent: 4px;
+  padding: 4px;
+  height: 20px;
+  margin: 0;
+  background: #3d3d7f;
+  border-radius: 4px;
+  color: white;
+  border: 0;
+}
