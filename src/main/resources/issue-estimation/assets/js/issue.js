@@ -62,13 +62,12 @@ $(() => {
    * @param estimation 作業量
    */
   function appendEstimaitonSelect(estimation) {
-    $('#label-priority').after(createEstimationSelect());
 
     var $lableEstimation = $('#label-estimation');
 
     // 作業量の指定があればUIに反映
     if (estimation) {
-      $('.estimation-dropdown-option[data-id="${estimation}"] i.octicon-check').addClass('octicon-check');
+      $('.estimation-dropdown-option[data-id="' + estimation + '"] i.octicon-check').addClass('octicon-check');
       $lableEstimation.addClass('selected').text(estimation);
     } else {
       $lableEstimation.text('No estimation');
@@ -85,6 +84,7 @@ $(() => {
           $oldSelectedOption.removeClass('octicon-check');
           $lableEstimation.removeClass('selected').text('No estimation');
         })
+        // TODO 削除失敗時のエラーハンドリング
       }
 
       // 値が変換しない場合はなにもしない
@@ -98,6 +98,7 @@ $(() => {
         $selectedOction.addClass('octicon-check');
         $lableEstimation.addClass('selected').text(selectedEstimation);
       });
+      // TODO 更新失敗時のエラーハンドリング
     });
   }
 
