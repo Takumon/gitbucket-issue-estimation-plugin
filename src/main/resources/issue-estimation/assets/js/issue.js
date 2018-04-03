@@ -1,18 +1,19 @@
 // IE11を考慮してES5の記法で書く
 
+
 /**
  * イシュー画面の初期化処理
  */
 $(() => {
-  /**  Issueの作業量を操作するためのURL */
-  var issueEstimateUrl = location.pathname + '/estimate'
+  // Plugin.scalaの変数を受け取る
+  var issueEstimateUrl = ISSUE_ESTIMATE_URL;
 
   /**
    * issueの作業量を取得する.
    *
    * @param issueId issue番号
    */
-  function fetchIssueEstimation() {
+  function fetchIssueEstimate() {
     return  $.ajax(issueEstimateUrl, {
               method: 'GET',
               dataType: 'json'
@@ -22,13 +23,13 @@ $(() => {
   /**
    * issueの作業量を登録または更新する.
    *
-   * @param estimation 作業量
+   * @param estimate 作業量
    */
-  function upsertEstimation(estimation) {
+  function upsertEstimate(estimate) {
     return  $.ajax(issueEstimateUrl, {
               method: 'POST',
               dataType: 'json',
-              data: { estimation: estimation }
+              data: { estimate: estimate }
             });
   }
 
@@ -36,67 +37,68 @@ $(() => {
    * issueの作業量を削除する.
    *
    */
-  function deleteEstimation() {
-    return  $.ajax(issueEstimateUrl, {
-              method: 'DELETE',
+  function deleteEstimate() {
+    return  $.ajax(issueEstimateUrl + '/delete', {
+              method: 'POST',
               dataType: 'json'
             });
   }
 
 
   // issueの作業量を取得してUIに反映
-  fetchIssueEstimation()
+  fetchIssueEstimate()
   .then(function(data) {
-    appendEstimaitonSelect(data.estimation);
+    appendEstimaiteSelect(data.estimate);
   })
   .catch(({status, responseJSON}) => {
     if (status !== 404) return;
-    appendEstimaitonSelect();
+    appendEstimaiteSelect();
   });
 
 
   /**
    * 指定した作業量で作業量設定エリアを画面を追加する.
    *
-   * @param estimation 作業量
+   * @param estimate 作業量
    */
-  function appendEstimaitonSelect(estimation) {
-    $('#label-priority').after(createEstimationSelect());
+  function appendEstimaiteSelect(estimate) {
 
     var $lableEstimation = $('#label-estimation');
 
     // 作業量の指定があればUIに反映
-    if (estimation) {
-      $('.estimation-dropdown-option[data-id="${estimation}"] i.octicon-check').addClass('octicon-check');
-      $lableEstimation.addClass('selected').text(estimation);
+    if (estimate) {
+      $('.estimation-dropdown-option[data-id="' + estimate + '"] i.octicon').addClass('octicon-check');
+      $lableEstimation.addClass('selected').text(estimate);
     } else {
-      $lableEstimation.text('No estimation');
+      $lableEstimation.text('No estimate');
     }
 
     $('#estimation-dropdown-memu').on('click', '.estimation-dropdown-option', function() {
-      var selectedEstimation = $(this).data('id');
+      var selectedEstimate = $(this).data('id');
       var $selectedOction = $(this).find('i.octicon');
 
       // data-idが存在しない場合は値をクリアする
-      if (!selectedEstimation) {
-        return deleteEstimation().then(function() {
+      if (!selectedEstimate) {
+        return deleteEstimate().then(function() {
           var $oldSelectedOption = $('.estimation-dropdown-option i.octicon-check');
           $oldSelectedOption.removeClass('octicon-check');
           $lableEstimation.removeClass('selected').text('No estimation');
         })
+        // TODO 削除失敗時のエラーハンドリング
       }
 
       // 値が変換しない場合はなにもしない
-      if ($lableEstimation.text() === selectedEstimation) return;
+      if ($lableEstimation.text() === selectedEstimate) return;
 
       // 選択した作業量を更新
-      upsertEstimation(selectedEstimation).then(function() {
+      upsertEstimate(selectedEstimate).then(function() {
         // UIを更新
         var $oldSelectedOption = $('.estimation-dropdown-option i.octicon-check');
         $oldSelectedOption.removeClass('octicon-check');
         $selectedOction.addClass('octicon-check');
-        $lableEstimation.addClass('selected').text(selectedEstimation);
+        $lableEstimation.addClass('selected').text(selectedEstimate);
       });
+      // TODO 更新失敗時のエラーハンドリング
     });
   }
 
