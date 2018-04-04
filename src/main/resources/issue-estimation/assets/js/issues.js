@@ -9,7 +9,6 @@ $(() => {
   // issue作業量操作処理
   //***********************************
 
-  // Plugin.scalaの変数を受け取る
   var issueEstimateBaseUrl = location.pathname;
 
   /**
