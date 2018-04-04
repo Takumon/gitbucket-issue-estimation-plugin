@@ -42,7 +42,48 @@ trait JenkinsResultCommentControllerBase extends ControllerBase {
     with WebHookPullRequestService
     with PullRequestService =>
 
+  ajaxGet("/:owner/:repository/issuesestimates")(referrersOnly { repository =>
 
+    val issueIds = multiParams("issueIds")
+    println("issueIds = " + issueIds)
+
+    if (issueIds.isEmpty ) {
+      NotFound()
+    } else {
+      org.json4s.jackson.Serialization.write(issueIds)
+
+      val issues = getIssueEstimates(repository.owner, repository.name, issueIds.map(_.toInt))
+      print("issues = " + issues)
+      org.json4s.jackson.Serialization.write(issues.map( i =>
+        Map(
+          "userName" -> i.userName,
+          "repositoryName" -> i.repositoryName,
+          "issueId" -> i.issueId,
+          "estimate" -> i.estimate
+        )
+      ))
+    }
+
+
+//    if ( !isInteger(issueId)) {
+//      println("get issueId not found")
+//      NotFound()
+//    } else {
+//
+//      println("get issueId found")
+//
+//      getIssueEstimate(repository.owner, repository.name, issueId.toInt).map { e =>
+//        println("get issue estimation get")
+//
+//        org.json4s.jackson.Serialization.write(Map(
+//          "userName" -> e.userName,
+//          "repositoryName" -> e.repositoryName,
+//          "issueId" -> e.issueId,
+//          "estimate" -> e.estimate
+//        ))
+//      } getOrElse NotFound()
+//    }
+  })
 
   ajaxGet("/:owner/:repository/issues/:issueId/estimate")(referrersOnly { repository =>
     println("get")

@@ -1,4 +1,4 @@
-#label-estimation {
+#label-estimate {
   width: 100%;
   text-align: left;
   -webkit-appearance: none;
@@ -8,7 +8,7 @@
   line-height: 12px;
 }
 
-#label-estimation.selected {
+#label-estimate.selected {
   text-indent: 4px;
   padding: 4px;
   height: 20px;

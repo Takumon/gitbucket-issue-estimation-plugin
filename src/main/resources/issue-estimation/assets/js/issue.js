@@ -2,9 +2,15 @@
 
 
 /**
- * イシュー画面の初期化処理
+ * イシュー画面のJS
  */
 $(() => {
+
+  //***********************************
+  // issue作業量操作処理
+  //***********************************
+
+
   // Plugin.scalaの変数を受け取る
   var issueEstimateUrl = ISSUE_ESTIMATE_URL;
 
@@ -45,6 +51,10 @@ $(() => {
   }
 
 
+  //***********************************
+  // 初期表示時の処理
+  //***********************************
+
   // issueの作業量を取得してUIに反映
   fetchIssueEstimate()
   .then(function(data) {
@@ -63,42 +73,42 @@ $(() => {
    */
   function appendEstimaiteSelect(estimate) {
 
-    var $lableEstimation = $('#label-estimation');
+    var $lableEstimate = $('#label-estimate');
 
     // 作業量の指定があればUIに反映
     if (estimate) {
-      $('.estimation-dropdown-option[data-id="' + estimate + '"] i.octicon').addClass('octicon-check');
-      $lableEstimation.addClass('selected').text(estimate);
+      $('.estimate-dropdown-option[data-id="' + estimate + '"] i.octicon').addClass('octicon-check');
+      $lableEstimate.addClass('selected').text(estimate);
     } else {
-      $lableEstimation.text('No estimate');
+      $lableEstimate.text('No estimate');
     }
 
-    $('#estimation-dropdown-memu').on('click', '.estimation-dropdown-option', function() {
+    $('#estimate-dropdown-memu').on('click', '.estimate-dropdown-option', function() {
       var selectedEstimate = $(this).data('id');
       var $selectedOction = $(this).find('i.octicon');
 
       // data-idが存在しない場合は値をクリアする
       if (!selectedEstimate) {
+        // TODO 削除失敗時のエラーハンドリング
         return deleteEstimate().then(function() {
-          var $oldSelectedOption = $('.estimation-dropdown-option i.octicon-check');
+          var $oldSelectedOption = $('.estimate-dropdown-option i.octicon-check');
           $oldSelectedOption.removeClass('octicon-check');
           $lableEstimation.removeClass('selected').text('No estimation');
         })
-        // TODO 削除失敗時のエラーハンドリング
       }
 
       // 値が変換しない場合はなにもしない
-      if ($lableEstimation.text() === selectedEstimate) return;
+      if ($lableEstimate.text() === selectedEstimate) return;
 
       // 選択した作業量を更新
+      // TODO 更新失敗時のエラーハンドリング
       upsertEstimate(selectedEstimate).then(function() {
         // UIを更新
-        var $oldSelectedOption = $('.estimation-dropdown-option i.octicon-check');
+        var $oldSelectedOption = $('.estimate-dropdown-option i.octicon-check');
         $oldSelectedOption.removeClass('octicon-check');
         $selectedOction.addClass('octicon-check');
         $lableEstimation.addClass('selected').text(selectedEstimate);
       });
-      // TODO 更新失敗時のエラーハンドリング
     });
   }
 

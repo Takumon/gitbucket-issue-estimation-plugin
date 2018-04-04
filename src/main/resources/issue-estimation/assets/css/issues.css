@@ -1,0 +1,27 @@
+.estimate {
+  -webkit-appearance: none;
+  background: #3d3d7f;
+  border-radius: 4px;
+  width: 24px;
+  height: 16px;
+  text-align: center;
+  font-size: 10px;
+  line-height: 15px;
+  color: white;
+  display: inline-block;
+  margin-left: 12px;
+  cursor: pointer;
+  padding-left: 9px;
+  border: 0;
+}
+
+.estimate.noEstimate {
+
+}
+
+.estimate:hover {
+  opacity: 0.7;
+}
+.estimate:focus {
+  outline: 0;
+}
