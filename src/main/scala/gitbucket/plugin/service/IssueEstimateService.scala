@@ -7,11 +7,13 @@ import gitbucket.plugin.model.Profile.profile.blockingApi._
 
 trait IssueEstimateService {
 
-  def getIssueEstimates(userName: String, repositoryName: String) =
-    IssueEstimates.filter(t => (t.userName === userName.bind) && (t.repositoryName === repositoryName.bind))
+  def getIssueEstimates(userName: String, repositoryName: String, issueIds: Seq[Int])(implicit session: Session) =
+    IssueEstimates.filter(t => (t.userName === userName) && (t.repositoryName === repositoryName) && (t.issueId inSet issueIds)).list
+
 
   def getIssueEstimate(userName: String, repositoryName: String, issueId: Int)(implicit session: Session): Option[IssueEstimate] =
     IssueEstimates.filter(t => (t.userName === userName.bind) && (t.repositoryName === repositoryName.bind) && (t.issueId === issueId.bind)).firstOption
+
 
   def upsertIssueEstimate(userName: String, repositoryName: String, issueId: Int, estimate: Int)(implicit session: Session): Int =
     IssueEstimates.insertOrUpdate(IssueEstimate(
@@ -20,6 +22,7 @@ trait IssueEstimateService {
       issueId         = issueId,
       estimate        = estimate
     ))
+
 
   def deleteIssueEstimate(userName: String, repositoryName: String, issueId: Int)(implicit session: Session): Int =
     IssueEstimates.filter(t => (t.userName === userName.bind) && (t.repositoryName === repositoryName.bind) && (t.issueId === issueId.bind)).delete
