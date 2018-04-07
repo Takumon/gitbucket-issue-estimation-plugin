@@ -1,6 +1,13 @@
 # gitbucket-issue-estimation-plugin  [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Build Status](https://travis-ci.org/Takumon/gitbucket-issue-estimation-plugin.svg?branch=master)](https://travis-ci.org/Takumon/gitbucket-issue-estimation-plugin)
 
-You can estimate issue  in GitBucket
+You can estimate issue in GitBucket.
+![Screenshot](images/issue.png)
+
+You can also set estimate by pulling down on the issues screen.
+![Screenshot](images/issues.png)
+
+You can check the progress based on estimate.
+![Screenshot](images/milestones.png)
 
 
 ## Installation
