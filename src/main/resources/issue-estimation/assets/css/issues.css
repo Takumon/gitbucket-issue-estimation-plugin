@@ -1,8 +1,10 @@
 .estimate {
   -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
   background: #3d3d7f;
   border-radius: 4px;
-  width: 24px;
+  width: 30px;
   height: 16px;
   text-align: center;
   font-size: 10px;
@@ -11,7 +13,8 @@
   display: inline-block;
   margin-left: 12px;
   cursor: pointer;
-  padding-left: 9px;
+  padding-left: 4px;
+  padding-right: 4px;
   border: 0;
 }
 

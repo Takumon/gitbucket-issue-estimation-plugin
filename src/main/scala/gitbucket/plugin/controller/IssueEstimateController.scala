@@ -19,12 +19,14 @@ class IssueEstimateController
     with LabelsService
     with ActivityService
     with RepositoryService
-    with AccountService
+    with CommitsService
     with IssuesService
     with ReferrerAuthenticator
-    with PullRequestService
-    with CommitsService
+    with AccountService
     with WebHookPullRequestService
+    with PullRequestService
+    with MilestonesService
+
 
 
 
@@ -40,20 +42,16 @@ trait JenkinsResultCommentControllerBase extends ControllerBase {
     with ReferrerAuthenticator
     with AccountService
     with WebHookPullRequestService
-    with PullRequestService =>
+    with PullRequestService
+    with MilestonesService =>
 
-  ajaxGet("/:owner/:repository/issuesestimates")(referrersOnly { repository =>
+  ajaxGet("/:owner/:repository/issues_estimates")(referrersOnly { repository =>
 
     val issueIds = multiParams("issueIds")
-    println("issueIds = " + issueIds)
 
-    if (issueIds.isEmpty ) {
-      NotFound()
-    } else {
-      org.json4s.jackson.Serialization.write(issueIds)
+    if ( !issueIds.isEmpty ) {
 
       val issues = getIssueEstimates(repository.owner, repository.name, issueIds.map(_.toInt))
-      print("issues = " + issues)
       org.json4s.jackson.Serialization.write(issues.map( i =>
         Map(
           "userName" -> i.userName,
@@ -62,43 +60,34 @@ trait JenkinsResultCommentControllerBase extends ControllerBase {
           "estimate" -> i.estimate
         )
       ))
-    }
-
-
-//    if ( !isInteger(issueId)) {
-//      println("get issueId not found")
-//      NotFound()
-//    } else {
-//
-//      println("get issueId found")
-//
-//      getIssueEstimate(repository.owner, repository.name, issueId.toInt).map { e =>
-//        println("get issue estimation get")
-//
-//        org.json4s.jackson.Serialization.write(Map(
-//          "userName" -> e.userName,
-//          "repositoryName" -> e.repositoryName,
-//          "issueId" -> e.issueId,
-//          "estimate" -> e.estimate
-//        ))
-//      } getOrElse NotFound()
-//    }
+    } else NotFound()
   })
 
+  ajaxGet("/:owner/:repository/milestones_estimates")(referrersOnly { repository =>
+
+    val counts = getMilestonesWithEstimateCount(repository.owner, repository.name)
+
+    val estimatesCountByMilestone = getMilestones(repository.owner, repository.name).map { milestone =>
+      Map(
+        "milestoneId" -> milestone.milestoneId,
+        "title"       -> milestone.title,
+        "open"        -> counts.getOrElse((milestone.milestoneId, false), 0),
+        "closed"      -> counts.getOrElse((milestone.milestoneId, true), 0)
+      )
+    }
+
+    org.json4s.jackson.Serialization.write(estimatesCountByMilestone)
+
+  })
+
+
   ajaxGet("/:owner/:repository/issues/:issueId/estimate")(referrersOnly { repository =>
-    println("get")
 
     val issueId = params("issueId")
 
-    if ( !isInteger(issueId)) {
-      println("get issueId not found")
-      NotFound()
-    } else {
-
-      println("get issueId found")
+    if (isInteger(issueId)) {
 
       getIssueEstimate(repository.owner, repository.name, issueId.toInt).map { e =>
-        println("get issue estimation get")
 
         org.json4s.jackson.Serialization.write(Map(
           "userName" -> e.userName,
@@ -107,12 +96,11 @@ trait JenkinsResultCommentControllerBase extends ControllerBase {
           "estimate" -> e.estimate
         ))
       } getOrElse NotFound()
-    }
+    } else NotFound()
   })
 
 
   ajaxPost("/:owner/:repository/issues/:issueId/estimate")(referrersOnly { repository =>
-    println("post")
     if (isIssueEditable(repository)) {
 
       val userName = params("owner")

@@ -5,6 +5,7 @@
  * イシュー画面のJS
  */
 $(() => {
+  'use strict';
 
   //***********************************
   // issue作業量操作処理
@@ -107,7 +108,7 @@ $(() => {
         var $oldSelectedOption = $('.estimate-dropdown-option i.octicon-check');
         $oldSelectedOption.removeClass('octicon-check');
         $selectedOction.addClass('octicon-check');
-        $lableEstimation.addClass('selected').text(selectedEstimate);
+        $lableEstimate.addClass('selected').text(selectedEstimate);
       });
     });
   }

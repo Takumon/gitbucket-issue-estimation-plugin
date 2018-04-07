@@ -4,6 +4,7 @@
  * イシュー一覧画面のJS
  */
 $(() => {
+  'use strict';
 
   //***********************************
   // issue作業量操作処理
@@ -17,8 +18,8 @@ $(() => {
    * @param issueIds issue番号の配列
    */
   function fetchIssueEstimates(issueIds) {
-    // 他とURL形式が異なる owner/repository/issuesestimates
-    return  $.ajax(issueEstimateBaseUrl + 'estimates', {
+    // 他とURL形式が異なる owner/repository/issues_estimates
+    return  $.ajax(issueEstimateBaseUrl + '_estimates', {
               method: 'GET',
               dataType: 'json',
               data: {
