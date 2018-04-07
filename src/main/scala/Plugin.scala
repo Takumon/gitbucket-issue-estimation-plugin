@@ -33,13 +33,23 @@ class Plugin extends gitbucket.core.plugin.Plugin {
     val path = settings.baseUrl.getOrElse(context.getContextPath)
 
     Seq(
-      // Issue一覧画面(ダッシュボードは除外)
+      // イシュー一覧(ダッシュボードは除外)
       "^(?!.*dashboard).*/issues$" ->
         s"""|
             |</script>
             |<script></script>
             |<script src="$path/plugin-assets/issue-estimation/assets/js/issues.js"></script>
             |<link href="$path/plugin-assets/issue-estimation/assets/css/issues.css" rel="stylesheet">
+            |<script>
+        """.stripMargin,
+
+      // マイルストーン一覧
+      ".*/milestones$" ->
+        s"""|
+            |</script>
+            |<script></script>
+            |<script src="$path/plugin-assets/issue-estimation/assets/js/milestones.js"></script>
+            |<link href="$path/plugin-assets/issue-estimation/assets/css/milestones.css" rel="stylesheet">
             |<script>
         """.stripMargin
     )
@@ -55,7 +65,7 @@ class Plugin extends gitbucket.core.plugin.Plugin {
 
       if (!issue.isPullRequest) {
         // Issue画面
-        val options = (1 to 30).map(i => s"""<li class="estimate-dropdown-option" data-id="$i" ><a href="javascript:void(0);"><i class="octicon"></i>$i</a></li>""").mkString("\\n")
+        val options = (1 to 30).map(i => s"""<li class="estimate-dropdown-option" data-id="$i" ><a href="javascript:void(0);"><i class="octicon"></i>$i</a></li>""").mkString("\n")
 
         Some(Html(
           s"""
